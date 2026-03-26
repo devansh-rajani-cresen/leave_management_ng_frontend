@@ -15,6 +15,8 @@ export class Login {
   username: string = '';
   password: string = '';
   showPassword: boolean = false;
+  showForgotPassword: boolean = false;
+  otpUsername: string = '';
 
   private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -57,6 +59,30 @@ export class Login {
 
   onForgotPassword(event: Event) {
     event.preventDefault();
-    alert('Redirecting to forgot password...');
+    this.showForgotPassword = true;
+    this.otpUsername = '';
+  }
+
+  sendOTP() {
+    this.otpUsername = this.otpUsername.trim();
+
+    if (!this.otpUsername) {
+      alert('Please enter your email!');
+      return;
+    }
+    else if (!this.emailRegex.test(this.otpUsername)) {
+      alert('Please enter a valid email address!');
+      return;
+    }
+
+    console.log('OTP sent to:', this.otpUsername);
+    alert('OTP has been sent to your email!');
+    this.otpUsername = '';
+    this.showForgotPassword = false;
+  }
+
+  backToLogin() {
+    this.showForgotPassword = false;
+    this.otpUsername = '';
   }
 }

@@ -35,6 +35,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+}
+
+.left.forgot-active {
+  justify-content: flex-start;
+  padding-top: 22px;
 }
 
 .left h2 {
@@ -95,10 +101,62 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  width: 100%;
 }
 
 .login-btn:hover {
   background: #5a4bdc;
+}
+
+/* FORGOT PASSWORD VIEW */
+.forgot-password-view {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.forgot-password-view h2,
+.forgot-password-view p {
+  text-align: center;
+}
+
+.forgot-password-view h2 {
+  margin-top: 100px;
+}
+
+.forgot-password-view p {
+  margin-bottom: 0;
+}
+
+.forgot-form-center {
+  width: 100%;
+  max-width: 360px;
+  margin: auto;
+}
+
+.top-back-btn {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #4f63d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.top-back-btn .material-icons {
+  font-size: 24px;
+}
+
+.send-otp-btn {
+  display: block;
+  width: 180px;
+  margin: 16px auto 0;
 }
 
 /* FORGOT */

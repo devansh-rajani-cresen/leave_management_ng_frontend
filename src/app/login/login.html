@@ -1,48 +1,78 @@
 <div class="container">
 
   <!-- Left Section -->
-  <div class="left">
-    <h2>LOGIN</h2>
-    <p>Planning for a Leave? Just one step away!</p>
+  <div class="left" [class.forgot-active]="showForgotPassword">
+    <button
+      *ngIf="showForgotPassword"
+      type="button"
+      class="top-back-btn"
+      (click)="backToLogin()"
+      aria-label="Back to login"
+    >
+      <span class="material-icons">arrow_back</span>
+    </button>
 
-    <!-- Email/Username section -->
-    <div class="input-box">
-      <span class="material-icons">email</span>
-      <input type="email" placeholder="Username" [(ngModel)]="username" name="username" required>
+    <!-- LOGIN SECTION -->
+    <div *ngIf="!showForgotPassword">
+      <h2>LOGIN</h2>
+      <p>Planning for a Leave? Just one step away!</p>
+
+      <!-- Email/Username section -->
+      <div class="input-box">
+        <span class="material-icons">email</span>
+        <input type="email" placeholder="Username" [(ngModel)]="username" name="username" required>
+      </div>
+
+      <!-- Password section -->
+      <div class="input-box">
+        <span class="material-icons">lock</span>
+
+        <input 
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Password"
+          [(ngModel)]="password"
+          name="password"
+          required
+        />
+
+        <button type="button" class="toggle" (click)="togglePassword()">
+          
+          <span class="material-icons" *ngIf="!showPassword">
+            visibility
+          </span>
+
+          <span class="material-icons" *ngIf="showPassword">
+            visibility_off
+          </span>
+
+        </button>
+      </div>
+
+      <!-- Forgot Button -->
+      <div class="forgot">
+        <a href="" (click)="onForgotPassword($event)">Forgot Password?</a>
+      </div>
+      
+      <!-- Login Button -->
+      <button class="login-btn" (click)="onLogin()">Login Now</button>
     </div>
 
-    <!-- Password section -->
-    <div class="input-box">
-      <span class="material-icons">lock</span>
+    <!-- FORGOT PASSWORD SECTION -->
+    <div *ngIf="showForgotPassword" class="forgot-password-view">
+      <h2>Forgot Password?</h2>
+      <p>Enter your email to receive an OTP</p>
 
-      <input 
-        [type]="showPassword ? 'text' : 'password'"
-        placeholder="Password"
-        [(ngModel)]="password"
-        name="password"
-        required
-      />
+      <div class="forgot-form-center">
+        <!-- Email section -->
+        <div class="input-box">
+          <span class="material-icons">email</span>
+          <input type="email" placeholder="Email" [(ngModel)]="otpUsername" name="otpUsername" required>
+        </div>
 
-      <button type="button" class="toggle" (click)="togglePassword()">
-        
-        <span class="material-icons" *ngIf="!showPassword">
-          visibility
-        </span>
-
-        <span class="material-icons" *ngIf="showPassword">
-          visibility_off
-        </span>
-
-      </button>
+        <!-- Send OTP Button -->
+        <button class="login-btn send-otp-btn" (click)="sendOTP()">Send OTP</button>
+      </div>
     </div>
-
-    <!-- Forgot Button -->
-    <div class="forgot">
-      <a href="" (click) = "onForgotPassword($event)">Forgot Password?</a>
-    </div>
-    
-    <!-- Login Button -->
-    <button class="login-btn" (click) = "onLogin()">Login Now</button>
     
   </div>
 
