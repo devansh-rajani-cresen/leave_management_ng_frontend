@@ -17,12 +17,12 @@ export class Login {
   password: string = '';
   showPassword: boolean = false;
 
-  private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   onLogin() {
 
     this.username = this.username.trim();
-    this.email = this.email.trim();
+    // this.email = this.email.trim();
 
     if (!this.username && !this.email && !this.password) {
       alert('Please fill in all the details!');
@@ -32,14 +32,14 @@ export class Login {
       alert('Please enter Username!');
       return;
     }
-    else if (!this.email) {
-      alert('Please enter Email!');
-      return;
-    }
-    else if (!this.emailRegex.test(this.email)) {
-      alert('Please enter a valid email address!');
-      return;
-    }
+    // else if (!this.email) {
+    //   alert('Please enter Email!');
+    //   return;
+    // }
+    // else if (!this.emailRegex.test(this.email)) {
+    //   alert('Please enter a valid email address!');
+    //   return;
+    // }
     else if (!this.password) {
       alert('Please enter Password!');
       return;
