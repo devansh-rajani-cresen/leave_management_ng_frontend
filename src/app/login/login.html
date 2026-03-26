@@ -1,0 +1,60 @@
+<div class="container">
+
+  <!-- Left Section -->
+  <div class="left">
+    <h2>LOGIN</h2>
+    <p>Planning for a Leave? Just one step away!</p>
+
+    <!-- Username section -->
+    <div class="input-box">
+      <span class="material-icons">person</span>
+      <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required>
+    </div>
+
+    <!-- Email Section -->
+    <div class="input-box">
+      <span class="material-icons">email</span>
+      <input type="text" placeholder="Email" [(ngModel)]="email" name="email" required>
+    </div>
+
+    <!-- Password section -->
+    <div class="input-box">
+      <span class="material-icons">lock</span>
+
+      <input 
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder="Password"
+        [(ngModel)]="password"
+        name="password"
+        required
+      />
+
+      <button type="button" class="toggle" (click)="togglePassword()">
+        
+        <span class="material-icons" *ngIf="!showPassword">
+          visibility
+        </span>
+
+        <span class="material-icons" *ngIf="showPassword">
+          visibility_off
+        </span>
+
+      </button>
+    </div>
+
+    <!-- Forgot Button -->
+    <div class="forgot">
+      <a href="" (click) = "onForgotPassword($event)">Forgot Password?</a>
+    </div>
+    
+    <!-- Login Button -->
+    <button class="login-btn" (click) = "onLogin()">Login Now</button>
+    
+  </div>
+
+  <!-- Right Section -->
+  <div class="right">
+    <img src="assets/cresen.jpg" alt="Company Logo">
+  </div>
+
+</div>
