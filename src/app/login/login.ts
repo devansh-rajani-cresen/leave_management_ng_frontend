@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class Login {
 
   username: string = '';
-  email: string = '';
+  fullName: string = '';
   password: string = '';
   showPassword: boolean = false;
 
@@ -24,18 +24,18 @@ export class Login {
     this.username = this.username.trim();
     // this.email = this.email.trim();
 
-    if (!this.username && !this.email && !this.password) {
+    if (!this.username && !this.fullName && !this.password) {
       alert('Please fill in all the details!');
+      return;
+    }
+    else if (!this.fullName) {
+      alert('Please enter Full Name!');
       return;
     }
     else if (!this.username){
       alert('Please enter Username!');
       return;
     }
-    // else if (!this.email) {
-    //   alert('Please enter Email!');
-    //   return;
-    // }
     // else if (!this.emailRegex.test(this.email)) {
     //   alert('Please enter a valid email address!');
     //   return;
@@ -47,7 +47,7 @@ export class Login {
 
     const userData = {
       username: this.username,
-      email: this.email,
+      fullName: this.fullName,
       password: this.password
     };
     
@@ -55,7 +55,7 @@ export class Login {
     alert('Login successful!');
 
     this.username = '';
-    this.email = '';
+    this.fullName = '';
     this.password = '';
   }
 
