@@ -15,12 +15,12 @@
     <!-- LOGIN SECTION -->
     <div *ngIf="!showForgotPassword">
       <h2>LOGIN</h2>
-      <p>Planning for a Leave? Just one step away!</p>
+      <p>Planning for a Leave? Just a one step away!</p>
 
       <!-- Email/Username section -->
       <div class="input-box">
         <span class="material-icons">email</span>
-        <input type="email" placeholder="Username" [(ngModel)]="username" name="username" required>
+        <input type="email" placeholder="Username or Email" [(ngModel)]="username" name="username" required>
       </div>
 
       <!-- Password section -->
@@ -54,19 +54,22 @@
       </div>
       
       <!-- Login Button -->
-      <button class="login-btn" (click)="onLogin()">Login Now</button>
+      <button class="login-btn" (click)="onLogin()">
+        Login Now
+        <span class="material-icons btn-arrow">arrow_forward</span>
+      </button>
     </div>
 
     <!-- FORGOT PASSWORD SECTION -->
     <div *ngIf="showForgotPassword" class="forgot-password-view">
       <h2>Forgot Password?</h2>
-      <p>Enter your email to receive an OTP</p>
+      <p>Don't Worry! Enter your email to receive an OTP</p>
 
       <div class="forgot-form-center">
         <!-- Email section -->
         <div class="input-box">
           <span class="material-icons">email</span>
-          <input type="email" placeholder="Email" [(ngModel)]="otpUsername" name="otpUsername" required>
+          <input type="email" placeholder="Username or Email" [(ngModel)]="otpUsername" name="otpUsername" required>
         </div>
 
         <!-- Send OTP Button -->
@@ -78,7 +81,11 @@
 
   <!-- Right Section -->
   <div class="right">
-    <img src="assets/cresen.jpg" alt="Company Logo">
+    <div class="logo-container">
+      <img src="assets/logo_text.png" alt="Main Logo text">
+      <img src="assets/cresen_bg_removed.png" alt="Company Logo">
+      <p class="tagline">COMPLEXITY SIMPLIFIED</p>
+    </div>
   </div>
 
 </div>
