@@ -1,9 +1,9 @@
 <div class="container">
 
   <!-- Left Section -->
-  <div class="left" [class.forgot-active]="showForgotPassword">
+  <div class="left" [class.forgot-active]="showForgotPassword()">
     <button
-      *ngIf="showForgotPassword"
+      *ngIf="showForgotPassword() && !otpVerified()"
       type="button"
       class="top-back-btn"
       (click)="backToLogin()"
@@ -13,14 +13,21 @@
     </button>
 
     <!-- LOGIN SECTION -->
-    <div *ngIf="!showForgotPassword">
+    <div *ngIf="!showForgotPassword()">
       <h2>LOGIN</h2>
       <p>Planning for a Leave? Just a one step away!</p>
 
       <!-- Email/Username section -->
       <div class="input-box">
         <span class="material-icons">email</span>
-        <input type="email" placeholder="Username or Email" [(ngModel)]="username" name="username" required>
+        <input
+          type="email"
+          placeholder="Username or Email"
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event)"
+          name="username"
+          required
+        >
       </div>
 
       <!-- Password section -->
@@ -28,20 +35,21 @@
         <span class="material-icons">lock</span>
 
         <input 
-          [type]="showPassword ? 'text' : 'password'"
+          [type]="showPassword() ? 'text' : 'password'"
           placeholder="Password"
-          [(ngModel)]="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
           name="password"
           required
         />
 
         <button type="button" class="toggle" (click)="togglePassword()">
           
-          <span class="material-icons" *ngIf="!showPassword">
+          <span class="material-icons" *ngIf="!showPassword()">
             visibility
           </span>
 
-          <span class="material-icons" *ngIf="showPassword">
+          <span class="material-icons" *ngIf="showPassword()">
             visibility_off
           </span>
 
@@ -61,22 +69,110 @@
     </div>
 
     <!-- FORGOT PASSWORD SECTION -->
-    <div *ngIf="showForgotPassword" class="forgot-password-view">
+    <div *ngIf="showForgotPassword() && !otpVerified()" class="forgot-password-view">
       <h2>Forgot Password?</h2>
       <p>Don't Worry! Enter your email to receive an OTP</p>
-
+ 
       <div class="forgot-form-center">
-        <!-- Email section -->
-        <div class="input-box">
+ 
+        <!-- Email + Send OTP -->
+        <div class="input-box" *ngIf="!otpSent()">
           <span class="material-icons">email</span>
-          <input type="email" placeholder="Username or Email" [(ngModel)]="otpUsername" name="otpUsername" required>
+          <input
+            type="email"
+            placeholder="Username or Email"
+            [ngModel]="otpUsername()"
+            (ngModelChange)="otpUsername.set($event)"
+            name="otpUsername"
+            required
+          >
         </div>
-
-        <!-- Send OTP Button -->
-        <button class="login-btn send-otp-btn" (click)="sendOTP()">Send OTP</button>
+        <button class="login-btn send-otp-btn" *ngIf="!otpSent()" (click)="sendOTP()">Send OTP</button>
+ 
+        <!-- OTP field + Verify -->
+        <div class="input-box" *ngIf="otpSent()">
+          <span class="material-icons">pin</span>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            [ngModel]="otpCode()"
+            (ngModelChange)="otpCode.set($event)"
+            name="otpCode"
+            required
+          >
+        </div>
+        <button class="login-btn send-otp-btn" *ngIf="otpSent()" (click)="verifyOTP()">Verify OTP</button>
+ 
       </div>
     </div>
-    
+
+    <!-- PASSWORD RESET SECTION -->
+    <div *ngIf="showForgotPassword() && otpVerified()" class="forgot-password-view">
+      <h2>Reset Password</h2>
+      <p style="margin-bottom: 8px;">Create your new password</p>
+ 
+      <div class="forgot-form-center">
+ 
+        <!-- New Password -->
+        <div class="input-box">
+          <span class="material-icons">lock</span>
+          <input 
+            [type]="showNewPassword() ? 'text' : 'password'"
+            placeholder="Enter New Password"
+            [ngModel]="newPassword()"
+            (ngModelChange)="newPassword.set($event)"
+            name="newPassword"
+            required
+          />
+          <button type="button" class="toggle" (click)="toggleNewPassword()">
+            <span class="material-icons" *ngIf="!showNewPassword()">
+              visibility
+            </span>
+            <span class="material-icons" *ngIf="showNewPassword()">
+              visibility_off
+            </span>
+          </button>
+        </div>
+ 
+        <!-- Confirm Password -->
+        <div class="input-box">
+          <span class="material-icons">lock</span>
+          <input 
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            placeholder="Confirm New Password"
+            [ngModel]="confirmPassword()"
+            (ngModelChange)="confirmPassword.set($event)"
+            name="confirmPassword"
+            required
+          />
+          <button type="button" class="toggle" (click)="toggleConfirmPassword()">
+            <span class="material-icons" *ngIf="!showConfirmPassword()">
+              visibility
+            </span>
+            <span class="material-icons" *ngIf="showConfirmPassword()">
+              visibility_off
+            </span>
+          </button>
+        </div>
+        
+        <!-- Password Constraints List -->
+        <div class="password-constraints">
+          <p class="constraints-title">Password Requirements:</p>
+          <ul>
+            <li>At least 8 characters long</li>
+            <li>Contain uppercase letters (A-Z)</li>
+            <li>Contain lowercase letters (a-z)</li>
+            <li>Contain digits (0-9)</li>
+            <li>Contain special characters (!@#$%^&*)</li>
+          </ul>
+        </div>
+ 
+        <!-- Reset Button -->
+        <button class="login-btn send-otp-btn" (click)="resetPassword()">Reset Password</button>
+ 
+      </div>
+    </div>
+
   </div>
 
   <!-- Right Section -->
