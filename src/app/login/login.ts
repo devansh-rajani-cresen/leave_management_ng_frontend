@@ -1,9 +1,9 @@
 import { Component, NgZone, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -31,10 +31,19 @@ export class Login {
     private http: HttpClient,
     private toastr: ToastrService,
     private router: Router,
+    private route: ActivatedRoute,
     private ngZone: NgZone,
   ) {}
 
   private readonly emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  ngOnInit() {
+    this.route.queryParamMap.subscribe((params) => {
+      if (params.get('reason') === 'auth-required') {
+        this.toastr.error('Please login first');
+      }
+    });
+  }
 
   onLogin() {
     this.username.set(this.username().trim());
@@ -86,10 +95,8 @@ export class Login {
 
         if (err.status === 0) {
           this.toastr.error('Server not reachable!');
-        } else if (err.status === 401) {
-          this.toastr.error('Invalid credentials!');
         } else {
-          this.toastr.error(err.error || 'Login failed!');
+          this.toastr.error('Invalid credentials!');
         }
       },
     });
@@ -132,7 +139,7 @@ export class Login {
             this.ngZone.run(() => {
               this.otpSent.set(true);
             });
-            this.toastr.success('OTP has been sent to your email!', 'Success');
+            this.toastr.success('OTP has been sent to your email!');
           } else {
             this.toastr.error('Failed to send OTP. Please try again.');
           }

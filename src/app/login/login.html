@@ -1,3 +1,5 @@
+<!-- In this file, I did Login Page design with ForgotPassword Feature, OTP Sending & Verification screen -->
+
 <div class="container">
 
   <!-- Left Section -->
@@ -17,12 +19,12 @@
       <h2>LOGIN</h2>
       <p>Planning for a Leave? Just a one step away!</p>
 
-      <!-- Email/Username section -->
+      <!-- Username section -->
       <div class="input-box">
         <span class="material-icons">email</span>
         <input
           type="email"
-          placeholder="Username or Email"
+          placeholder="Username"
           [ngModel]="username()"
           (ngModelChange)="username.set($event)"
           name="username"
