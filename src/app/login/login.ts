@@ -120,10 +120,12 @@ export class Login {
       return;
     }
 
-    const sendOtpParams = new HttpParams().set('email', this.otpUsername());
+    const sendOtpPayload = {
+      email: this.otpUsername()
+    };
 
     this.http
-      .post<boolean>('http://localhost:8081/auth/send-otp', {}, { params: sendOtpParams })
+      .post<boolean>('http://localhost:8081/auth/send-otp', sendOtpPayload)
       .subscribe({
         next: (success: boolean) => {
           if (success) {
@@ -156,12 +158,13 @@ export class Login {
       return;
     }
 
-    const verifyOtpParams = new HttpParams()
-      .set('email', this.otpUsername())
-      .set('otp', this.otpCode());
+    const verifyOtpPayload = {
+      email: this.otpUsername(),
+      otp: this.otpCode(),
+    };
 
     this.http
-      .post<boolean>('http://localhost:8081/auth/verify-otp', {}, { params: verifyOtpParams })
+      .post<boolean>('http://localhost:8081/auth/verify-otp', verifyOtpPayload)
       .subscribe({
         next: (isValid: boolean) => {
           if (isValid) {
