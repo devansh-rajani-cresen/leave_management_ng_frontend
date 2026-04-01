@@ -12,7 +12,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
-
 export class Login {
   username = signal('');
   password = signal('');
@@ -26,6 +25,19 @@ export class Login {
   confirmPassword = signal('');
   showNewPassword = signal(false);
   showConfirmPassword = signal(false);
+
+  private resetForgotPasswordState() {
+    this.otpUsername.set('');
+    this.otpCode.set('');
+    this.otpSent.set(false);
+    this.otpVerified.set(false);
+    this.newPassword.set('');
+    this.confirmPassword.set('');
+  }
+
+  private trimValue(attribute: any) {
+    attribute.set(attribute().trim());
+  }
 
   constructor(
     private http: HttpClient,
@@ -46,16 +58,14 @@ export class Login {
   }
 
   onLogin() {
-    this.username.set(this.username().trim());
+    this.trimValue(this.username);
+    this.trimValue(this.password);
 
     if (!this.username() && !this.password()) {
       this.toastr.warning('Please fill in all the details!');
       return;
     } else if (!this.username()) {
-      this.toastr.warning('Please enter username!');
-      return;
-    } else if (!this.emailRegex.test(this.username())) {
-      this.toastr.warning('Please enter a valid username!');
+      this.toastr.warning('Please enter Email!');
       return;
     } else if (!this.password()) {
       this.toastr.warning('Please enter Password!');
@@ -70,10 +80,10 @@ export class Login {
 
     this.http.post<any>('http://localhost:8081/auth/login', userData).subscribe({
       next: (res) => {
-        console.log('Response:', res);
-
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('role', res.role);
+        sessionStorage.setItem('token', res.token);
+        sessionStorage.setItem('role', res.role);
+        sessionStorage.setItem('username', this.username());
+        sessionStorage.setItem('userFullName', res.fullName);
 
         this.toastr.success('Login successful!');
 
@@ -94,7 +104,7 @@ export class Login {
         console.error(err);
 
         if (err.status === 0) {
-          this.toastr.error('Server not reachable!');
+          this.toastr.error('Server not reachable! Please try again later.');
         } else {
           this.toastr.error('Invalid credentials!');
         }
@@ -109,13 +119,11 @@ export class Login {
   onForgotPassword(event: Event) {
     event.preventDefault();
     this.showForgotPassword.set(true);
-    this.otpUsername.set('');
-    this.otpCode.set('');
-    this.otpSent.set(false);
+    this.resetForgotPasswordState();
   }
 
   sendOTP() {
-    this.otpUsername.set(this.otpUsername().trim());
+    this.trimValue(this.otpUsername);
 
     if (!this.otpUsername()) {
       this.toastr.warning('Please enter your email!');
@@ -128,32 +136,30 @@ export class Login {
     }
 
     const sendOtpPayload = {
-      email: this.otpUsername()
+      email: this.otpUsername(),
     };
 
-    this.http
-      .post<boolean>('http://localhost:8081/auth/send-otp', sendOtpPayload)
-      .subscribe({
-        next: (success: boolean) => {
-          if (success) {
-            this.ngZone.run(() => {
-              this.otpSent.set(true);
-            });
-            this.toastr.success('OTP has been sent to your email!');
-          } else {
-            this.toastr.error('Failed to send OTP. Please try again.');
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-          console.error(err);
-          this.toastr.error(err.error || 'Unable to send OTP.');
-        },
-      });
+    this.http.post<boolean>('http://localhost:8081/auth/send-otp', sendOtpPayload).subscribe({
+      next: (success: boolean) => {
+        if (success) {
+          this.ngZone.run(() => {
+            this.otpSent.set(true);
+          });
+          this.toastr.success('OTP has been sent to your email!');
+        } else {
+          this.toastr.error('Failed to send OTP. Please try again.');
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.toastr.error(err.error || 'Unable to send OTP.');
+      },
+    });
   }
 
   verifyOTP() {
-    this.otpUsername.set(this.otpUsername().trim());
-    this.otpCode.set(this.otpCode().trim());
+    this.trimValue(this.otpUsername);
+    this.trimValue(this.otpCode);
 
     if (!this.otpUsername()) {
       this.toastr.warning('Please enter your email!');
@@ -170,24 +176,22 @@ export class Login {
       otp: this.otpCode(),
     };
 
-    this.http
-      .post<boolean>('http://localhost:8081/auth/verify-otp', verifyOtpPayload)
-      .subscribe({
-        next: (isValid: boolean) => {
-          if (isValid) {
-            this.ngZone.run(() => {
-              this.otpVerified.set(true);
-            });
-            this.toastr.success('OTP verified successfully!');
-          } else {
-            this.toastr.error('Invalid or expired OTP!');
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-          console.error(err);
-          this.toastr.error(err.error || 'Unable to verify OTP.');
-        },
-      });
+    this.http.post<boolean>('http://localhost:8081/auth/verify-otp', verifyOtpPayload).subscribe({
+      next: (isValid: boolean) => {
+        if (isValid) {
+          this.ngZone.run(() => {
+            this.otpVerified.set(true);
+          });
+          this.toastr.success('OTP verified successfully!');
+        } else {
+          this.toastr.error('Invalid or expired OTP!');
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.toastr.error(err.error || 'Unable to verify OTP.');
+      },
+    });
   }
 
   toggleNewPassword() {
@@ -209,8 +213,8 @@ export class Login {
   }
 
   resetPassword() {
-    this.newPassword.set(this.newPassword().trim());
-    this.confirmPassword.set(this.confirmPassword().trim());
+    this.trimValue(this.newPassword);
+    this.trimValue(this.confirmPassword);
 
     const password = this.newPassword();
 
@@ -267,12 +271,7 @@ export class Login {
           this.ngZone.run(() => {
             this.toastr.success('Password reset successfully!');
             this.showForgotPassword.set(false);
-            this.otpVerified.set(false);
-            this.otpUsername.set('');
-            this.otpCode.set('');
-            this.newPassword.set('');
-            this.confirmPassword.set('');
-            this.otpSent.set(false);
+            this.resetForgotPasswordState();
           });
         },
         error: (err: HttpErrorResponse) => {
@@ -284,11 +283,6 @@ export class Login {
 
   backToLogin() {
     this.showForgotPassword.set(false);
-    this.otpUsername.set('');
-    this.otpCode.set('');
-    this.otpSent.set(false);
-    this.otpVerified.set(false);
-    this.newPassword.set('');
-    this.confirmPassword.set('');
+    this.resetForgotPasswordState();
   }
 }
