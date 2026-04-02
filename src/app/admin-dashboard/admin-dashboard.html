@@ -1,0 +1,359 @@
+<div
+  class="h-screen flex flex-col overflow-hidden"
+  style="background: linear-gradient(135deg, #1e80a3 0%, #f79425 100%)"
+>
+  <!-- Top Navbar -->
+  <nav
+    class="text-white shadow-lg shrink-0 sticky top-0 z-30"
+    style="background: linear-gradient(135deg, #1e80a3 0%, #155a7a 50%, #f79425 100%)"
+  >
+    <div class="flex items-center justify-between px-3 md:px-6 py-3 md:py-4 flex-wrap md:flex-nowrap gap-2 md:gap-0">
+      <div class="flex items-center gap-2 md:gap-3">
+        <button
+          (click)="toggleSidebar()"
+          class="p-2 hover:bg-yellow-500 hover:bg-opacity-20 rounded-lg transition duration-200"
+        >
+          <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
+        </button>
+        <span class="text-sm md:text-xl font-bold">{{userRole}} PANEL</span>
+      </div>
+
+      <!-- Right Side: Empty -->
+      <div class="flex items-center gap-2 md:gap-4">
+        <!-- Placeholder for future features -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="flex flex-1 min-h-0 overflow-hidden">
+    <!-- Left Sidebar -->
+    <aside
+      class="shadow-lg transition-all duration-300 h-full shrink-0"
+      [class.w-64]="isSidebarOpen"
+      [class.w-20]="!isSidebarOpen"
+      style="background: linear-gradient(180deg, #1e80a3 0%, #155a7a 100%); color: white"
+    >
+      <nav class="h-full overflow-y-auto py-6 flex flex-col">
+        <!-- Top Content -->
+        <div class="flex-1">
+          <div class="mb-6" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
+            <div class="sidebar-brand" [class.sidebar-brand-collapsed]="!isSidebarOpen">
+              <div *ngIf="!isSidebarOpen" class="sidebar-logo-glow">
+                <img
+                  src="assets/cresen_bg_removed.png"
+                  alt="Company Logo"
+                  class="sidebar-logo sidebar-logo-collapsed"
+                />
+              </div>
+              <img
+                *ngIf="isSidebarOpen"
+                src="assets/complete_cs_logo_bg_removed.png"
+                alt="Company Logo"
+                class="sidebar-logo sidebar-logo-expanded"
+              />
+            </div>
+          </div>
+
+          <!-- Overview Menu -->
+          <div class="mb-4" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
+            <button
+              (click)="toggleMenu('overview')"
+              class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 group hover:bg-yellow-500 hover:bg-opacity-20"
+              [class.active-sidebar-item]="currentPage === 'overview'"
+              [class.sidebar-nav-btn-collapsed]="!isSidebarOpen"
+            >
+              <span class="material-icons shrink-0 text-white" style="font-size: 28px">
+                home
+              </span>
+              <span
+                class="font-medium transition duration-200 text-white"
+                [class.hidden]="!isSidebarOpen"
+              >
+                Overview
+              </span>
+            </button>
+            <div class="sidebar-separator" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen"></div>
+          </div>
+
+          <!-- User Management Menu -->
+          <div class="mb-4" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
+            <button
+              (click)="toggleMenu('users')"
+              class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 group hover:bg-yellow-500 hover:bg-opacity-20"
+              [class.active-sidebar-item]="currentPage === 'users'"
+              [class.sidebar-nav-btn-collapsed]="!isSidebarOpen"
+            >
+              <span class="material-icons shrink-0 text-white" style="font-size: 28px">
+                people
+              </span>
+              <span
+                class="font-medium transition duration-200 text-white"
+                [class.hidden]="!isSidebarOpen"
+              >
+                User Management
+              </span>
+            </button>
+            <div class="sidebar-separator" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen"></div>
+          </div>
+        </div>
+
+        <!-- Bottom: User Profile Menu -->
+        <div class="mt-auto relative" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
+          <button
+            (click)="toggleUserMenu()" 
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 hover:bg-yellow-500 hover:bg-opacity-20"
+            [class.justify-center]="!isSidebarOpen"
+          >
+            <svg class="w-6 h-6 md:w-7 md:h-7 text-white shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>
+            <span
+              class="font-medium transition duration-200 text-white text-sm"
+              [class.hidden]="!isSidebarOpen"
+            >
+              User Profile
+            </span>
+          </button>
+          
+          <!-- User Profile Dropdown Menu -->
+          <div
+            *ngIf="showUserMenu"
+            class="absolute bottom-full mb-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50"
+            [class.left-2]="!isSidebarOpen"
+            [class.left-4]="isSidebarOpen"
+          >
+            <!-- User Name Header -->
+            <div class="px-4 py-2 border-b border-gray-200">
+              <p class="text-sm font-semibold text-gray-800">{{ fullName }}</p>
+              <p class="text-xs text-gray-500">{{ userRole }}</p>
+            </div>
+            <!-- Logout Option -->
+            <button
+              (click)="logout()"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100 transition duration-200 flex items-center gap-2"
+            >
+              <span class="material-icons text-sm text-red-500">logout</span>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto min-h-0">
+      <div class="max-w-full">
+        <!-- Overview Page -->
+        <div *ngIf="currentPage === 'overview'">
+          <h1 class="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2">Welcome, {{ fullName }}!</h1>
+          <p class="text-white text-sm md:text-md mb-6 md:mb-8 opacity-90">
+            Track and manage your employees efficiently
+          </p>
+
+          <!-- Loading State -->
+          <div *ngIf="!isUsersLoaded" class="text-center py-12">
+            <div class="bg-white/10 rounded-2xl border border-white/30 p-12">
+              <h3 class="text-2xl font-bold text-white mb-2">Loading Employees...</h3>
+              <p class="text-white/70">Fetching users from server</p>
+            </div>
+          </div>
+
+          <!-- Employees Cards -->
+          <div *ngIf="isUsersLoaded && rowData.length > 0">           
+            <div class="grid gap-4 mb-8">
+              <div
+                *ngFor="let employee of rowData"
+                class="rounded-2xl border-2 border-white/30 bg-linear-to-r from-blue-500/20 to-orange-500/20 backdrop-blur-md px-6 py-5 shadow-xl hover:shadow-2xl hover:border-white/50 transition-all duration-300 relative"
+              >
+                <!-- Status Badge - Top Right Corner (cuts the border) -->
+                <div class="absolute -top-2 -right-2 z-10">
+                  <div
+                    class="rounded-full px-2 py-0.5 font-semibold text-white text-center transition-all text-xs"
+                    [class.bg-linear-to-r]="employee.active"
+                    [class.from-green-500]="employee.active"
+                    [class.to-emerald-600]="employee.active"
+                    [class.bg-red-500]="!employee.active"
+                  >
+                    <span class="flex items-center gap-0.5">
+                      <span class="material-icons" style="font-size: 14px;" *ngIf="employee.active">check_circle</span>
+                      <span class="material-icons" style="font-size: 14px;" *ngIf="!employee.active">do_not_disturb_on</span>
+                      <span class="text-xs">{{ employee.active ? 'Active' : 'Not active' }}</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <!-- Left: Name and Email -->
+                  <div class="flex-1">
+                    <h3 class="text-xl font-bold text-white mb-1">{{ employee.fullName }}</h3>
+                    <p class="text-orange-300 text-sm">{{ employee.emailId }}</p>
+                  </div>
+
+                  <!-- Right: Role Badge -->
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="rounded-full px-5 py-2 font-semibold text-white text-center transition-all"
+                      [class.bg-yellow-500]="employee.role === 'ADMIN'"
+                      [class.bg-green-500]="employee.role === 'MANAGER'"
+                      [class.bg-blue-500]="employee.role === 'EMPLOYEE'"
+                    >
+                      {{ employee.role }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="isUsersLoaded && rowData.length === 0" class="text-center py-12">
+            <div class="bg-white/10 rounded-2xl border-2 border-dashed border-white/30 p-12">
+              <span class="material-icons text-6xl text-yellow-400 block mb-4">person_add</span>
+              <h3 class="text-2xl font-bold text-white mb-2">No Employees Yet</h3>
+              <p class="text-white/70">Create your first employee to see them here!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management Page -->
+        <div *ngIf="currentPage === 'users'" class="user-management-section">
+
+          <!-- Add New Employee Form -->
+          <div class="user-form-card rounded-xl md:rounded-2xl shadow-xl p-4 md:p-8 border border-white/60 max-w-4xl">
+            <h2 class="text-xl md:text-2xl font-bold text-amber-100 mb-5">Add New Employee</h2>
+            <!-- <p class="text-slate-700 text-xs md:text-md mb-7 font-medium">Add new employees to the system</p> -->
+            <form (ngSubmit)="submitUserForm()" #userMgmtForm="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Company ID <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="companyId"
+                  [(ngModel)]="userForm.companyId"
+                  placeholder="Enter company ID"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Full Name <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="employeeFullName"
+                  [(ngModel)]="userForm.fullName"
+                  placeholder="Enter full name"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Username <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="userName"
+                  [(ngModel)]="userForm.username"
+                  placeholder="Enter username"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Password <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="userPassword"
+                  [(ngModel)]="userForm.password"
+                  placeholder="Enter password"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Email <span class="text-red-500">*</span></label>
+                <input
+                  type="email"
+                  name="userEmail"
+                  [(ngModel)]="userForm.email"
+                  placeholder="Enter email"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Role <span class="text-red-500">*</span></label>
+                <select
+                  name="userRoleSelect"
+                  [(ngModel)]="userForm.role"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                >
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="MANAGER">MANAGER</option>
+                  <option value="EMPLOYEE">EMPLOYEE</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Gender <span class="text-red-500">*</span></label>
+                <select
+                  name="userGender"
+                  [(ngModel)]="userForm.gender"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                >
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs md:text-sm font-semibold text-black mb-2">Status <span class="text-red-500">*</span></label>
+                <select
+                  name="userStatus"
+                  [(ngModel)]="userForm.isActive"
+                  class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+                  required
+                >
+                  <option [ngValue]="true">Active</option>
+                  <option [ngValue]="false">Not Active</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-2 pt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-4">
+                <button
+                  type="submit"
+                  [disabled]="userMgmtForm.invalid"
+                  class="w-full md:w-auto px-4 md:px-8 py-2 md:py-3 rounded-lg md:rounded-xl text-white font-semibold shadow-lg transition duration-200 enabled:hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                  style="background: linear-gradient(135deg, #2515b7 0%, #e0832a 100%)"
+                >
+                  Save Employee
+                </button>
+                <button
+                  type="button"
+                  (click)="resetForm(userMgmtForm)"
+                  class="w-full md:w-auto px-4 md:px-8 py-2 md:py-3 rounded-lg md:rounded-xl text-white font-semibold shadow-lg transition duration-200 hover:shadow-xl text-sm"
+                  style="background: linear-gradient(135deg, #2515b7 0%, #e0832a 100%)"
+                >
+                  Reset Form
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
