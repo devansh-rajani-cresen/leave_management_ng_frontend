@@ -2,3 +2,16 @@
 
 @import 'tailwindcss';
 @import 'ngx-toastr/toastr';
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+/* Global scrollbar fix - prevent flashing on page load */
+html, body {
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none;
+}

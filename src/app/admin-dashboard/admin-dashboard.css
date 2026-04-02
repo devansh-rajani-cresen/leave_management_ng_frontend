@@ -6,7 +6,7 @@
 
 /* Main container gradient background */
 :host ::ng-deep .min-h-screen {
-  background: linear-gradient(135deg, #1E80A3 0%, #f79425 100%);
+  background: #ffffff;
   min-height: 100vh;
 }
 
@@ -23,10 +23,10 @@ button:hover {
 
 /* Active menu item styling */
 .active-sidebar-item {
-  background: linear-gradient(135deg, rgba(247, 148, 37, 0.48) 0%, rgba(255, 190, 92, 0.42) 100%) !important;
-  border: 1px solid rgba(255, 235, 180, 0.7);
+  background: linear-gradient(135deg, #f79425 0%, #e0832a 100%) !important;
+  border: 1px solid #f3a857;
   border-radius: 0.5rem;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 18px rgba(247, 148, 37, 0.35);
 }
 
 .active-sidebar-item .material-icons,
@@ -176,43 +176,24 @@ aside::-webkit-scrollbar-thumb:hover {
   overflow: hidden;
 }
 
-/* User creation form: high-contrast and bolder appearance */
+/* User creation form */
 .user-form-card {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(145deg, rgba(11, 75, 109, 0.96) 0%, rgba(30, 128, 163, 0.94) 45%, rgba(247, 148, 37, 0.92) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 22px 48px rgba(8, 35, 56, 0.34), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-  backdrop-filter: blur(8px);
-}
-
-.user-form-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.1), transparent 30%);
-  pointer-events: none;
-}
-
-.user-form-card > * {
-  position: relative;
-  z-index: 1;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
 .user-management-section label {
-  color: #ffffff !important;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  color: #0f172a !important;
+  font-weight: 600;
 }
 
 .user-management-section input,
 .user-management-section select {
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: #ffffff;
+  border: 1px solid #d1d5db;
   color: #0f172a;
-  font-weight: 600;
-  box-shadow: 0 6px 16px rgba(8, 35, 56, 0.16);
+  font-weight: 500;
+  box-shadow: none;
 }
 
 .user-management-section input::placeholder {
@@ -222,27 +203,23 @@ aside::-webkit-scrollbar-thumb:hover {
 
 .user-management-section input:hover,
 .user-management-section select:hover {
-  border-color: #ffffff;
+  border-color: #94a3b8;
 }
 
 .user-management-section input:focus,
 .user-management-section select:focus {
-  border-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.26), 0 6px 18px rgba(15, 23, 42, 0.18) !important;
+  border-color: #1e80a3 !important;
+  box-shadow: 0 0 0 3px rgba(30, 128, 163, 0.12) !important;
 }
 
 .user-management-section button[type="submit"],
 .user-management-section button[type="button"] {
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 10px 24px rgba(8, 35, 56, 0.24);
+  font-weight: 600;
 }
 
 .user-management-section button[type="submit"]:hover,
 .user-management-section button[type="button"]:hover {
   transform: translateY(-1px);
-  filter: saturate(1.08);
 }
 
 /* Hide scrollbar from main content area but keep scrolling */
@@ -263,8 +240,74 @@ main::-webkit-scrollbar {
 
 /* Main content area background */
 main {
-  background: linear-gradient(135deg, rgba(30, 128, 163, 0.05) 0%, rgba(247, 148, 37, 0.05) 100%);
-  backdrop-filter: blur(10px);
+  background: #ffffff;
+}
+
+.admin-content-card {
+  background: #ffffff;
+}
+
+.user-grid-wrapper {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.user-grid-full {
+  width: 100%;
+  height: calc(100vh - 250px);
+  min-height: 520px;
+}
+
+/* AG Grid table formatting */
+:host ::ng-deep .ag-theme-alpine .ag-row {
+  background-color: #ffffff;
+}
+
+:host ::ng-deep .ag-theme-alpine .ag-row:nth-child(even) {
+  background-color: #f3f4f6;
+}
+
+:host ::ng-deep .ag-theme-alpine .ag-row .ag-cell {
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .ag-theme-alpine .ag-row .ag-cell-value {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+:host ::ng-deep .ag-theme-alpine .ag-paging-panel {
+  min-height: 48px;
+  padding: 6px 12px;
+  box-sizing: border-box;
+  border-top: 1px solid #e2e8f0;
+}
+
+:host ::ng-deep .ag-theme-alpine .ag-paging-page-size {
+  margin-right: 8px;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(15, 23, 42, 0.2);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.popup-card {
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* Submit button styling */
@@ -286,6 +329,11 @@ button[style*="1E80A3"]:hover {
     top: 0;
     height: 100vh;
     z-index: 50;
+  }
+
+  .user-grid-full {
+    height: calc(100vh - 220px);
+    min-height: 360px;
   }
 }
 
