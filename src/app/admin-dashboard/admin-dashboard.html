@@ -1,170 +1,218 @@
-<div class="h-screen flex flex-col overflow-hidden" style="background: #ffffff">
-  <!-- Top Navbar -->
-  <nav
-    class="text-white shadow-lg shrink-0 sticky top-0 z-30"
-    style="background: linear-gradient(135deg, #1e80a3 0%, #155a7a 50%, #f79425 100%)"
-  >
-    <div
-      class="flex items-center justify-between px-3 md:px-6 py-3 md:py-4 flex-wrap md:flex-nowrap gap-2 md:gap-0"
-    >
-      <div class="flex items-center gap-2 md:gap-3">
-        <button
-          (click)="toggleSidebar()"
-          class="p-2 hover:bg-orange-400 hover:bg-opacity-20 rounded-lg transition duration-200"
-        >
-          <svg
-            class="w-5 h-5 md:w-6 md:h-6 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
-          </svg>
-        </button>
-        <span class="text-sm md:text-xl font-bold">{{ userRole }} PANEL</span>
-      </div>
+<div class="admin-shell">
+  <div class="admin-shell__backdrop"></div>
 
-      <div class="flex items-center gap-2 md:gap-4">
-        <span class="material-icons">person</span>
-        <span class="text-sm md:text-base font-semibold text-white">{{ fullName }}</span>
-        <button
-          (click)="logout()"
-          class="px-3 md:px-4 py-2 rounded-lg text-white font-semibold shadow-md transition duration-200 hover:opacity-90"
-          style="background: #dc2626"
-        >
-          <!-- Logout -->
-          <span class="material-icons py-0.6">logout</span>
-        </button>
+  <nav class="topbar">
+    <div class="topbar__left">
+      <div class="topbar__brand">
+        <img
+          src="assets/complete_cs_logo_bg_removed.png"
+          alt="Cresen Solutions"
+          class="topbar__logo"
+        />
+        <div class="topbar__brand-copy">
+          <h1>{{ userRole }} PANEL</h1>
+        </div>
       </div>
+    </div>
+
+    <div class="topbar__right">
+      <button (click)="logout()" class="logout-btn" type="button">
+        <span class="material-icons">logout</span>
+        <span>Logout</span>
+      </button>
     </div>
   </nav>
 
-  <!-- Main Container -->
-  <div class="flex flex-1 min-h-0 overflow-hidden">
-    <!-- Left Sidebar -->
+  <div class="workspace">
     <aside
-      class="shadow-lg transition-all duration-300 h-full shrink-0"
-      [class.w-64]="isSidebarOpen"
-      [class.w-20]="!isSidebarOpen"
-      style="background: linear-gradient(180deg, #1e80a3 0%, #155a7a 100%); color: white"
+      class="sidebar mt-2"
+      [class.sidebar--open]="isSidebarOpen"
+      [class.sidebar--collapsed]="!isSidebarOpen"
     >
-      <nav class="h-full overflow-y-auto py-6 flex flex-col">
-        <!-- Top Content -->
-        <div class="flex-1">
-          <div class="mb-6" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
-            <div class="sidebar-brand" [class.sidebar-brand-collapsed]="!isSidebarOpen">
-              <div *ngIf="!isSidebarOpen" class="sidebar-logo-glow">
-                <img
-                  src="assets/cresen_bg_removed.png"
-                  alt="Company Logo"
-                  class="sidebar-logo sidebar-logo-collapsed"
-                />
+      <nav class="sidebar__nav">
+
+        <!-- menu button -->
+        <button
+          (click)="toggleSidebar()"
+          class="icon-btn"
+          type="button"
+          aria-label="Toggle sidebar"
+        >
+          <span class="material-icons" style="align-items: center;">menu</span>
+        </button>
+
+        <div class="sidebar__nav-item">
+          <!-- Overview -->
+          <button
+            (click)="toggleMenu('overview')"
+            class="sidebar__nav-btn"
+            [class.active-sidebar-item]="currentPage === 'overview'"
+            [class.sidebar__nav-btn--collapsed]="!isSidebarOpen"
+            type="button"
+          >
+            <span class="material-icons" style="font-size: 30px;">home</span>
+            <div class="sidebar__nav-copy" [class.hidden]="!isSidebarOpen">
+              <strong>Overview</strong>
+              <span>Track your team at once!</span>
+            </div>
+          </button>
+          <div class="sidebar__nav-divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="sidebar__nav-item">
+          <!-- Employee Management -->
+          <button
+            (click)="toggleMenu('users')"
+            class="sidebar__nav-btn"
+            [class.active-sidebar-item]="currentPage === 'users'"
+            [class.sidebar__nav-btn--collapsed]="!isSidebarOpen"
+            type="button"
+          >
+            <span class="material-icons" style="font-size: 30px;">groups</span>
+            <div class="sidebar__nav-copy" [class.hidden]="!isSidebarOpen">
+              <strong>Employee Management</strong>
+              <span>Manage your employees at ease!</span>
+            </div>
+          </button>
+          <div class="sidebar__nav-divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="sidebar__nav-item">
+          <!-- Leave Operations -->
+          <button
+            (click)="toggleMenu('leaves')"
+            class="sidebar__nav-btn"
+            [class.active-sidebar-item]="currentPage === 'leaves'"
+            [class.sidebar__nav-btn--collapsed]="!isSidebarOpen"
+            type="button"
+          >
+            <span class="material-icons" style="font-size: 30px;">calendar_month</span>
+            <div class="sidebar__nav-copy" [class.hidden]="!isSidebarOpen">
+              <strong>Leave Creation</strong>
+              <span>Create leave for your Employee!</span>
+            </div>
+          </button>
+          <div class="sidebar__nav-divider" aria-hidden="true"></div>
+        </div>
+
+        <div class="sidebar__nav-item">
+          <button
+            (click)="toggleMenu('org-tree')"
+            class="sidebar__nav-btn"
+            [class.active-sidebar-item]="currentPage === 'org-tree'"
+            [class.sidebar__nav-btn--collapsed]="!isSidebarOpen"
+            type="button"
+          >
+            <span class="material-icons" style="font-size: 30px;">account_tree</span>
+            <div class="sidebar__nav-copy" [class.hidden]="!isSidebarOpen">
+              <strong>Organizational Tree</strong>
+              <span>See role and status split</span>
+            </div>
+          </button>
+          <div class="sidebar__nav-divider" aria-hidden="true"></div>
+        </div>
+
+        
+      </nav>
+
+      <div class="sidebar__profile">
+        <div class="sidebar__profile-initial">{{ fullName.charAt(0) || 'A' }}</div>
+        <div class="sidebar__profile-copy" [class.hidden]="!isSidebarOpen">
+          <strong>{{ fullName }}</strong>
+          <span>{{ userRole }}</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content-area">
+      <section *ngIf="currentPage === 'overview'" class="overview-section">
+        <div class="first-msg-of-section">
+          <span class="eyebrow mt-5">Overview</span>
+          <h2>Welcome back, {{ fullName }}!</h2>
+        </div>
+
+        <div class="stats-grid">
+            <article class="stat-card stat-card--interactive" (click)="openOverviewDestination('org-tree')">
+              <div class="stat-card__icon">
+                <span class="material-icons">groups</span>
               </div>
-              <img
-                *ngIf="isSidebarOpen"
-                src="assets/complete_cs_logo_bg_removed.png"
-                alt="Company Logo"
-                class="sidebar-logo sidebar-logo-expanded"
+              <div class="stat-card__content">
+                <p>Total Employees</p>
+                <h3>{{ totalUsers }}</h3>
+              </div>
+            </article>
+
+            <article class="stat-card stat-card--interactive" (click)="openOverviewDestination('org-tree')">
+              <div class="stat-card__icon">
+                <span class="material-icons">check_circle</span>
+              </div>
+              <div class="stat-card__content">
+                <p>Active Profiles</p>
+                <h3>{{ activeUsers }}</h3>
+              </div>
+            </article>
+
+            <article class="stat-card stat-card--interactive" (click)="openOverviewDestination('users')">
+              <div class="stat-card__icon">
+                <span class="material-icons">admin_panel_settings</span>
+              </div>
+              <div class="stat-card__content">
+                <p>Admins</p>
+                <h3>{{ adminCount }}</h3>
+              </div>
+            </article>
+
+            <article class="stat-card stat-card--interactive" (click)="openOverviewDestination('users')">
+              <div class="stat-card__icon">
+                <span class="material-icons">badge</span>
+              </div>
+              <div class="stat-card__content">
+                <p>Managers</p>
+                <h3>{{ managerCount }}</h3>
+              </div>
+            </article>
+        </div>
+      </section>
+
+      <section *ngIf="currentPage === 'users'" class="user-management-section">
+        <div class="surface-card surface-card--tight">
+          <div class="section-header">
+            <div class="first-msg-of-section">
+              <span class="eyebrow mt-5">Employee Management</span>
+              <h2>Manage your Employee's Roles & Responsibilities here!</h2>
+            </div>
+
+            <button type="button" (click)="openAddEmployeeForm()" class="primary-btn mt-5">
+              <span class="material-icons">person_add</span>
+              <span>Add Employee</span>
+            </button>
+          </div>
+
+          <div *ngIf="!isUsersLoaded" class="state-card">
+            <span class="material-icons">hourglass_top</span>
+            <h3>Loading employee records</h3>
+            <p>Fetching user details from the server.</p>
+          </div>
+
+          <div *ngIf="isUsersLoaded && rowData.length > 0" class="search-panel">
+            <div class="search-panel__grid">
+              <span class="material-icons">search</span>
+              <input
+                type="text"
+                name="userSearchTerm"
+                [(ngModel)]="userSearchTerm"
+                placeholder="Search Employee"
               />
             </div>
           </div>
 
-          <!-- Overview Menu -->
-          <div class="mb-4" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
-            <button
-              (click)="toggleMenu('overview')"
-              class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 group hover:bg-yellow-500 hover:bg-opacity-20"
-              [class.active-sidebar-item]="currentPage === 'overview'"
-              [class.sidebar-nav-btn-collapsed]="!isSidebarOpen"
-            >
-              <span class="material-icons shrink-0 text-white" style="font-size: 28px"> home </span>
-              <span
-                class="font-medium transition duration-200 text-white"
-                [class.hidden]="!isSidebarOpen"
-              >
-                Overview
-              </span>
-            </button>
-            <div
-              class="sidebar-separator"
-              [class.px-4]="isSidebarOpen"
-              [class.px-2]="!isSidebarOpen"
-            ></div>
-          </div>
-
-          <!-- User Management Menu -->
-          <div class="mb-4" [class.px-4]="isSidebarOpen" [class.px-2]="!isSidebarOpen">
-            <button
-              (click)="toggleMenu('users')"
-              class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 group hover:bg-yellow-500 hover:bg-opacity-20"
-              [class.active-sidebar-item]="currentPage === 'users'"
-              [class.sidebar-nav-btn-collapsed]="!isSidebarOpen"
-            >
-              <span class="material-icons shrink-0 text-white" style="font-size: 28px">
-                people
-              </span>
-              <span
-                class="font-medium transition duration-200 text-white"
-                [class.hidden]="!isSidebarOpen"
-              >
-                User Management
-              </span>
-            </button>
-            <div
-              class="sidebar-separator"
-              [class.px-4]="isSidebarOpen"
-              [class.px-2]="!isSidebarOpen"
-            ></div>
-          </div>
-        </div>
-      </nav>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 p-4 md:p-8 overflow-y-auto min-h-0">
-      <div class="max-w-full admin-content-card rounded-xl md:rounded-2xl p-4 md:p-6">
-        <div *ngIf="currentPage === 'overview'" class="overview-section">
-          <h1 class="text-2xl md:text-3xl font-bold text-slate-900">Welcome, {{ fullName }}!</h1>
-        </div>
-
-        <div *ngIf="currentPage === 'users'" class="user-management-section">
-          <div class="user-management-header mb-2">
-            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 text-center">
-              User Management
-            </h2>
-            <div class="flex justify-end mt-3">
-              <button
-                type="button"
-                (click)="openAddEmployeeForm()"
-                class="inline-flex items-center gap-2 whitespace-nowrap px-4 py-1 rounded-lg text-white font-semibold shadow-sm hover:shadow-md transition duration-200"
-                style="background: linear-gradient(135deg, #1e80a3 0%, #155a7a 100%)"
-              >
-                <span class="material-icons text-[20px] leading-none">person_add</span>
-                <span>Add Employee</span>
-              </button>
-            </div>
-          </div>
-
           <div
-            *ngIf="!isUsersLoaded"
-            class="text-center py-10 border border-gray-200 rounded-lg bg-white"
-          >
-            <h3 class="text-lg font-semibold text-slate-800 mb-1">Loading Employees...</h3>
-            <p class="text-slate-500 text-sm">Fetching users from server</p>
-          </div>
-
-          <div
-            *ngIf="isUsersLoaded && rowData.length > 0"
+            *ngIf="isUsersLoaded && filteredRowData.length > 0"
             class="ag-theme-alpine user-grid-wrapper user-grid-full"
           >
             <ag-grid-angular
               class="w-full h-full"
-              [rowData]="rowData"
+              [rowData]="filteredRowData"
               [columnDefs]="colDefs"
               [defaultColDef]="defaultColDef"
               [rowHeight]="52"
@@ -177,172 +225,254 @@
             </ag-grid-angular>
           </div>
 
-          <div
-            *ngIf="isUsersLoaded && rowData.length === 0"
-            class="text-center py-10 border border-dashed border-gray-300 rounded-lg bg-white"
-          >
-            <h3 class="text-lg font-semibold text-slate-800 mb-1">No Employees Yet</h3>
-            <p class="text-slate-500 text-sm">Add your first employee to get started.</p>
+          <div *ngIf="isUsersLoaded && rowData.length === 0" class="state-card state-card--empty">
+            <span class="material-icons">group_off</span>
+            <h3>No employees found</h3>
+            <p>Add your first employee to start building the organization workspace.</p>
+          </div>
+
+          <div *ngIf="isUsersLoaded && rowData.length > 0 && filteredRowData.length === 0" class="state-card state-card--empty">
+            <span class="material-icons">search_off</span>
+            <h3>No matching employees</h3>
+            <p>Try adjusting the search text for full name, username, or email.</p>
           </div>
         </div>
-      </div>
+      </section>
+
+      <section *ngIf="currentPage === 'leaves'" class="user-management-section">
+        <div class="surface-card surface-card--tight">
+          <div class="first-msg-of-section">
+            <span class="eyebrow mt-5">Leave Creation</span>
+            <h2>Create leave for your Employee!</h2>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="currentPage === 'org-tree'" class="user-management-section">
+        <div class="surface-card surface-card--tight">
+          <div class="first-msg-of-section">
+            <span class="eyebrow mt-5">Organizational Tree</span>
+            <h2>Organizational Tree of Employees</h2>
+          </div>
+
+          <div *ngIf="!isUsersLoaded" class="state-card">
+            <span class="material-icons">hourglass_top</span>
+            <h3>Loading organization data</h3>
+            <p>Fetching user details from the server.</p>
+          </div>
+
+          <div *ngIf="isUsersLoaded && rowData.length > 0" class="org-tree-canvas">
+            <div class="org-tree">
+              <div class="org-tree__level org-tree__level--root">
+                <article class="org-card org-card--root">
+                  <span class="org-card__label">Total Employees</span>
+                  <strong>{{ totalUsers }}</strong>
+                </article>
+              </div>
+
+              <div class="org-tree__level org-tree__level--roles">
+                <article class="org-card org-card--role">
+                  <span class="org-card__label">Admin</span>
+                  <strong>{{ adminCount }}</strong>
+
+                  <div class="org-tree__children">
+                    <article class="org-card org-card--child">
+                      <span class="org-card__label">Active</span>
+                      <strong>{{ adminActiveCount }}</strong>
+                    </article>
+                    <article class="org-card org-card--child">
+                      <span class="org-card__label">Not Active</span>
+                      <strong>{{ adminInactiveCount }}</strong>
+                    </article>
+                  </div>
+                </article>
+
+                <article class="org-card org-card--role">
+                  <span class="org-card__label">Manager</span>
+                  <strong>{{ managerCount }}</strong>
+
+                  <div class="org-tree__children">
+                    <article class="org-card org-card--child">
+                      <span class="org-card__label">Active</span>
+                      <strong>{{ managerActiveCount }}</strong>
+                    </article>
+                    <article class="org-card org-card--child">
+                      <span class="org-card__label">Not Active</span>
+                      <strong>{{ managerInactiveCount }}</strong>
+                    </article>
+                  </div>
+                </article>
+
+                <article class="org-card org-card--role">
+                  <span class="org-card__label">Employee</span>
+                  <strong>{{ employeeCount }}</strong>
+
+                  <div class="org-tree__children">
+                    <article class="org-card org-card--child">
+                      <span class="org-card__label">Active</span>
+                      <strong>{{ employeeActiveCount }}</strong>
+                    </article>
+                    <article class="org-card org-card--child">
+                      <span class="org-card__label">Not Active</span>
+                      <strong>{{ employeeInactiveCount }}</strong>
+                    </article>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isUsersLoaded && rowData.length === 0" class="state-card state-card--empty">
+            <span class="material-icons">account_tree</span>
+            <h3>No organization data found</h3>
+            <p>Add employees to build the organization tree.</p>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
   <div *ngIf="showAddEmployeeForm" class="popup-overlay" (click)="closeAddEmployeeForm()">
-    <div
-      class="popup-card user-form-card rounded-xl md:rounded-2xl shadow-sm p-4 md:p-8 border border-gray-200 bg-white"
-      (click)="$event.stopPropagation()"
-    >
-      <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-5">Add New Employee</h2>
-      <form
-        (ngSubmit)="submitUserForm()"
-        #userMgmtForm="ngForm"
-        class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5"
-      >
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <div class="popup-card__header">
         <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Company ID <span class="text-red-500">*</span></label
-          >
+          <span class="eyebrow">{{ isEditMode ? 'Employee update' : 'Employee onboarding' }}</span>
+          <h2>{{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}</h2>
+        </div>
+        <button type="button" class="icon-btn icon-btn--light" (click)="closeAddEmployeeForm()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <form (ngSubmit)="submitUserForm()" #userMgmtForm="ngForm" class="form-grid">
+        <div class="field">
+          <label>Company ID <span>*</span></label>
           <input
+            *ngIf="!isEditMode"
+            type="text"
+            name="companyIdAuto"
+            placeholder="Auto-Generated"
+            [disabled]="true"
+            required
+          />
+          <input
+            *ngIf="isEditMode"
             type="text"
             name="companyId"
             [(ngModel)]="userForm.companyId"
-            placeholder="Enter company ID"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+            [disabled]="true"
             required
           />
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Full Name <span class="text-red-500">*</span></label
-          >
+        <div class="field">
+          <label>Full Name <span>*</span></label>
           <input
             type="text"
             name="employeeFullName"
             [(ngModel)]="userForm.fullName"
-            placeholder="Enter full name"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+            placeholder="Enter Full Name"
             required
           />
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Username <span class="text-red-500">*</span></label
-          >
+        <div class="field">
+          <label>Username <span>*</span></label>
           <input
             type="text"
             name="userName"
             [(ngModel)]="userForm.username"
-            placeholder="Enter username"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+            placeholder="Enter Username"
             required
           />
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Password <span class="text-red-500">*</span></label
-          >
+        <div class="field">
+          <label>
+            Password
+            <span *ngIf="!isEditMode">*</span>
+          </label>
           <input
             type="text"
             name="userPassword"
             [(ngModel)]="userForm.password"
-            placeholder="Enter password"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
-            required
+            placeholder="Enter Password"
+            [required]="!isEditMode"
           />
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Email <span class="text-red-500">*</span></label
-          >
+        <div class="field">
+          <label>Email <span>*</span></label>
           <input
             type="email"
             name="userEmail"
             [(ngModel)]="userForm.email"
-            placeholder="Enter email"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
+            placeholder="Enter Email"
             required
           />
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Role <span class="text-red-500">*</span></label
-          >
-          <select
-            name="userRoleSelect"
-            [(ngModel)]="userForm.role"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
-            required
-          >
+        <div class="field">
+          <label>Role <span>*</span></label>
+          <select name="userRoleSelect" [(ngModel)]="userForm.role" required>
             <option value="ADMIN">ADMIN</option>
             <option value="MANAGER">MANAGER</option>
             <option value="EMPLOYEE">EMPLOYEE</option>
           </select>
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Gender <span class="text-red-500">*</span></label
-          >
-          <select
-            name="userGender"
-            [(ngModel)]="userForm.gender"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
-            required
-          >
+        <div class="field">
+          <label>Gender <span>*</span></label>
+          <select name="userGender" [(ngModel)]="userForm.gender" required>
             <option value="MALE">Male</option>
             <option value="FEMALE">Female</option>
             <option value="OTHER">Other</option>
           </select>
         </div>
 
-        <div>
-          <label class="block text-xs md:text-sm font-semibold text-black mb-2"
-            >Status <span class="text-red-500">*</span></label
-          >
-          <select
-            name="userStatus"
-            [(ngModel)]="userForm.isActive"
-            class="w-full rounded-lg md:rounded-xl border border-gray-300 px-3 md:px-4 py-2 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-500"
-            required
-          >
+        <div class="field">
+          <label>Status <span>*</span></label>
+          <select name="userStatus" [(ngModel)]="userForm.isActive" required>
             <option [ngValue]="true">Active</option>
             <option [ngValue]="false">Not Active</option>
           </select>
         </div>
 
-        <div class="md:col-span-2 pt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-4">
-          <button
-            type="submit"
-            [disabled]="userMgmtForm.invalid"
-            class="w-full md:w-auto px-4 md:px-8 py-2 md:py-3 rounded-lg md:rounded-xl text-white font-semibold shadow-lg transition duration-200 enabled:hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed text-sm"
-            style="background: linear-gradient(135deg, #1e80a3 0%, #155a7a 100%)"
-          >
-            Save Employee
+        <div class="form-actions">
+          <button type="button" (click)="resetForm(userMgmtForm)" class="secondary-btn">
+            <span class="material-icons">restart_alt</span>
+            <span>Reset Form</span>
           </button>
-          <button
-            type="button"
-            (click)="resetForm(userMgmtForm)"
-            class="w-full md:w-auto px-4 md:px-8 py-2 md:py-3 rounded-lg md:rounded-xl text-white font-semibold shadow-lg transition duration-200 hover:shadow-xl text-sm"
-            style="background: linear-gradient(135deg, #1e80a3 0%, #155a7a 100%)"
-          >
-            Reset Form
-          </button>
-          <button
-            type="button"
-            (click)="closeAddEmployeeForm()"
-            class="w-full md:w-auto px-4 md:px-8 py-2 md:py-3 rounded-lg md:rounded-xl text-slate-700 font-semibold border border-gray-300 transition duration-200 hover:bg-gray-50 text-sm"
-          >
-            Cancel
+
+          <button type="submit" [disabled]="userMgmtForm.invalid" class="primary-btn">
+            <span class="material-icons">save</span>
+            <span>{{ isEditMode ? 'Update Employee' : 'Save Employee' }}</span>
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div *ngIf="showDeleteConfirm" class="popup-overlay" (click)="cancelDeleteUser()">
+    <div class="popup-card popup-card--confirm" (click)="$event.stopPropagation()">
+      <div class="popup-card__header">
+        <div>
+          <span class="eyebrow">Delete confirmation</span>
+          <h2>Are you sure you want to delete?</h2>
+          <p>{{ deleteCandidateName }}</p>
+        </div>
+      </div>
+
+      <div class="confirm-actions">
+        <button type="button" class="danger-btn" (click)="confirmDeleteUser()">
+          <span class="material-icons">delete</span>
+          <span>Yes</span>
+        </button>
+        <button type="button" class="secondary-btn" (click)="cancelDeleteUser()">
+          <span class="material-icons">close</span>
+          <span>No</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
