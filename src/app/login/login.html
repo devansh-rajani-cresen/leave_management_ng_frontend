@@ -1,0 +1,189 @@
+<!-- In this file, I did Login Page design with ForgotPassword Feature, OTP Sending & Verification screen -->
+
+<div class="container">
+
+  <!-- Left Section -->
+  <div class="left" [class.forgot-active]="showForgotPassword()">
+    <button
+      *ngIf="showForgotPassword() && !otpVerified()"
+      type="button"
+      class="top-back-btn"
+      (click)="backToLogin()"
+      aria-label="Back to login"
+    >
+      <span class="material-icons">arrow_back</span>
+    </button>
+
+    <!-- LOGIN SECTION -->
+    <div *ngIf="!showForgotPassword()">
+      <h2>LOGIN</h2>
+      <p>Planning for a Leave? Just a one step away!</p>
+
+      <!-- Username section -->
+      <div class="input-box">
+        <span class="material-icons">person</span>
+        <input
+          type="email"
+          placeholder="Username"
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event)"
+          name="username"
+          required
+        >
+      </div>
+
+      <!-- Password section -->
+      <div class="input-box">
+        <span class="material-icons">lock</span>
+
+        <input 
+          [type]="showPassword() ? 'text' : 'password'"
+          placeholder="Password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          required
+        />
+
+        <button type="button" class="toggle" (click)="togglePassword()">
+          
+          <span class="material-icons" *ngIf="!showPassword()">
+            visibility
+          </span>
+
+          <span class="material-icons" *ngIf="showPassword()">
+            visibility_off
+          </span>
+
+        </button>
+      </div>
+
+      <!-- Forgot Button -->
+      <div class="forgot">
+        <a href="" (click)="onForgotPassword($event)">Forgot Password?</a>
+      </div>
+      
+      <!-- Login Button -->
+      <button class="login-btn" (click)="onLogin()">
+        Login Now
+        <span class="material-icons btn-arrow">arrow_forward</span>
+      </button>
+    </div>
+
+    <!-- FORGOT PASSWORD SECTION -->
+    <div *ngIf="showForgotPassword() && !otpVerified()" class="forgot-password-view">
+      <h2>Forgot Password?</h2>
+      <p>Don't Worry! Enter your email to receive an OTP</p>
+ 
+      <div class="forgot-form-center">
+ 
+        <!-- Email + Send OTP -->
+        <div class="input-box" *ngIf="!otpSent()">
+          <span class="material-icons">email</span>
+          <input
+            type="email"
+            placeholder="Email"
+            [ngModel]="otpUsername()"
+            (ngModelChange)="otpUsername.set($event)"
+            name="otpUsername"
+            required
+          >
+        </div>
+        <button class="login-btn send-otp-btn" *ngIf="!otpSent()" (click)="sendOTP()">Send OTP</button>
+ 
+        <!-- OTP field + Verify -->
+        <div class="input-box" *ngIf="otpSent()">
+          <span class="material-icons">pin</span>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            [ngModel]="otpCode()"
+            (ngModelChange)="otpCode.set($event)"
+            name="otpCode"
+            required
+          >
+        </div>
+        <button class="login-btn send-otp-btn" *ngIf="otpSent()" (click)="verifyOTP()">Verify OTP</button>
+ 
+      </div>
+    </div>
+
+    <!-- PASSWORD RESET SECTION -->
+    <div *ngIf="showForgotPassword() && otpVerified()" class="forgot-password-view">
+      <h2>Reset Password</h2>
+      <p style="margin-bottom: 8px;">Create your new password</p>
+ 
+      <div class="forgot-form-center">
+ 
+        <!-- New Password -->
+        <div class="input-box">
+          <span class="material-icons">lock</span>
+          <input 
+            [type]="showNewPassword() ? 'text' : 'password'"
+            placeholder="Enter New Password"
+            [ngModel]="newPassword()"
+            (ngModelChange)="newPassword.set($event)"
+            name="newPassword"
+            required
+          />
+          <button type="button" class="toggle" (click)="toggleNewPassword()">
+            <span class="material-icons" *ngIf="!showNewPassword()">
+              visibility
+            </span>
+            <span class="material-icons" *ngIf="showNewPassword()">
+              visibility_off
+            </span>
+          </button>
+        </div>
+ 
+        <!-- Confirm Password -->
+        <div class="input-box">
+          <span class="material-icons">lock</span>
+          <input 
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            placeholder="Confirm New Password"
+            [ngModel]="confirmPassword()"
+            (ngModelChange)="confirmPassword.set($event)"
+            name="confirmPassword"
+            required
+          />
+          <button type="button" class="toggle" (click)="toggleConfirmPassword()">
+            <span class="material-icons" *ngIf="!showConfirmPassword()">
+              visibility
+            </span>
+            <span class="material-icons" *ngIf="showConfirmPassword()">
+              visibility_off
+            </span>
+          </button>
+        </div>
+        
+        <!-- Password Constraints List -->
+        <div class="password-constraints">
+          <p class="constraints-title">Password Requirements:</p>
+          <ul>
+            <li>At least 8 characters long</li>
+            <li>Contain uppercase letters (A-Z)</li>
+            <li>Contain lowercase letters (a-z)</li>
+            <li>Contain digits (0-9)</li>
+            <li>Contain special characters (!@#$%^&*)</li>
+          </ul>
+        </div>
+ 
+        <!-- Reset Button -->
+        <button class="login-btn send-otp-btn" (click)="resetPassword()">Reset Password</button>
+ 
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Section -->
+  <div class="right">
+    <div class="logo-container">
+      <img class="corner-logo" src="assets/logo_text.png" alt="Main Logo text">
+      <img src="assets/cresen_bg_removed.png" alt="Company Logo">
+      <p class="tagline">COMPLEXITY SIMPLIFIED</p>
+    </div>
+  </div>
+
+</div>
